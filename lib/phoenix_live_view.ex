@@ -938,6 +938,10 @@ defmodule Phoenix.LiveView do
     put_redirect(socket, {:redirect, %{to: url}})
   end
 
+  def redirect(%Socket{} = socket, external: {:custom_scheme, url}) do
+    put_redirect(socket, {:redirect, %{external: url}})
+  end
+
   def redirect(%Socket{} = socket, external: url) do
     case url do
       url when is_binary(url) ->

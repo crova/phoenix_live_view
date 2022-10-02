@@ -1,4 +1,4 @@
-defmodule Phoenix.LiveView.Utils do
+ defmodule Phoenix.LiveView.Utils do
   # Shared helpers used mostly by Channel and Diff,
   # but also Static, and LiveViewTest.
   @moduledoc false
