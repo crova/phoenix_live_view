@@ -239,7 +239,7 @@ defmodule Phoenix.LiveViewTest.DOM do
             %{@static => cid} when is_integer(cid) and cid < 0 ->
               {deep_merge_diff(old[-cid], Map.delete(cdiff, @static)), cache}
 
-            %{} ->
+            _else ->
               {deep_merge_diff(Map.get(old, cid, %{}), cdiff), cache}
           end
 
