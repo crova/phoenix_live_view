@@ -448,16 +448,30 @@ defmodule Phoenix.LiveViewTest do
       assert render_component(MyComponent, %{id: 123, user: %User{}}, router: SomeRouter) =~
                "some markup in component"
 
+
+  We are defining our own `render_component` macro so we can use the patch introduced in
+  LV v0.20.15 that we can't take advantage for now.
+  This was blocking updating to elixir 1.17.
+  Credits to this pr: https://github.com/phoenixframework/phoenix_live_view/commit/489e8de024e03976e9ae38138eec517fbd456d27
+  Below code is a copy/paste from there.
+  We're not using the same component we defined for the fork of Surface as it felt weird
+  to import a function from Surface when we're trying to move away from it.
+  Specially from non Surface component tests.
   """
   defmacro render_component(component, assigns \\ Macro.escape(%{}), opts \\ []) do
     endpoint = Module.get_attribute(__CALLER__.module, :endpoint)
 
+    component =
+      if is_atom(component) do
+        quote do
+          unquote(component).__live__()
+          unquote(component)
+        end
+      else
+        component
+      end
+
     quote do
-      component = unquote(component)
-
-      # Emit this line for undefined component warnings
-      if(is_atom(component), do: component.__live__())
-
       Phoenix.LiveViewTest.__render_component__(
         unquote(endpoint),
         unquote(component),
